@@ -2,13 +2,15 @@ import random
 
 
 #შევქმნათ სია, რომელშიც შევინახავთ კარტის დასტას.
-deck = []
-suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
-values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
-for suit in suits:
-    for value in values:
-        deck.append(f"{value} of {suit}")
-random.shuffle(deck)
+def create_deck():
+    deck = []
+    suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
+    values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+    for suit in suits:
+        for value in values:
+            deck.append(f"{value} of {suit}")
+    random.shuffle(deck)
+    return deck
 
 
 # ფუნქცია მიიღებს მოთამაშეების სახელებს და სეინახავს ლისთში.
@@ -21,7 +23,7 @@ def get_playaers():
 
 
 # ფუნქცია დააგენერირებს ხუთ კარტს სამი მოთამაშისთვის და შეინახავს დიქტში. 
-def generate_cards(players : list): 
+def generate_cards(players : list, deck : list): 
     cards_for_player = {}
     for i in players:
         cards = []
@@ -32,24 +34,27 @@ def generate_cards(players : list):
     return cards_for_player
 
 # სათითაოდ კითხავს მოთამაშეებს თუ სურთ ერთი კარტის შეცვლა, თუ კი, შეცვლის ერთ სასურველ კარტს.
-def change_cards(cards_for_players : dict):
+def change_cards(cards_for_players : dict, deck : list):
     for player, cards in cards_for_players.items():
         choice = input(f"{player}, do you want to change one card? (yes/no): ")
         if choice.lower() == 'yes':
             num = int(input("Enter the number of the card you want to change, from 1 to 5 : ")) - 1
             changed_card = deck.pop()
             cards[num] = changed_card
+            cards_for_players[player] = cards
     return cards_for_players
 
             
 
 def main():
+    #შეიქმნება კარტების დასტის სია
+    deck = create_deck()
+    
     #მომხმარებელს მოსთხოვს მოთამაშეების სახელებს
     players = get_playaers()
     
     #დავაგენერირებთ კარტს თითოეული მოთამაშისთვის და დავბეჭდავთ
-    cards_for_players = generate_cards(players)
-    print(cards_for_players)
+    cards_for_players = generate_cards(players, deck)
     for player, cards in cards_for_players.items():
         print(f"{player}'s Cards:")
         for i in range(len(cards)):
@@ -57,7 +62,7 @@ def main():
         print()
         
     #კითხავს მოთამაშეებს სათითაოდ, თუ უნდათ კარტის შეცვლა, თუ კი, შეცვლის ერთ კარტს ამ მოთამაშისთვის და დავბეჭდავთ.
-    new_cards_for_players = change_cards(cards_for_players)
+    new_cards_for_players = change_cards(cards_for_players, deck)
     for player, cards in new_cards_for_players.items():
         print(f"{player}'s Cards:")
         for i in range(len(cards)):
