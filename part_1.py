@@ -44,7 +44,47 @@ def change_cards(cards_for_players : dict, deck : list):
             cards_for_players[player] = cards
     return cards_for_players
 
-            
+
+# ფუნქცია, რომელიც ქულებს ანიჭებს კარტებს
+def assigning_points(card):
+    value = card.split()[0]
+    if value == 'A':
+        return 20
+    elif value == 'K':
+        return 13
+    elif value == 'Q':
+        return 12
+    elif value == 'J':
+        return 11
+    else:
+        return int(value)
+
+
+# ფუნქცია, რომელიც ითვლის ქულებს
+def calculate_points(cards):
+    points = sum(assigning_points(card) for card in cards)
+    return points
+
+
+# ფუნქცია, რომელიც ითვლის ფერების რაოდენობას
+def calculate_suits(cards):
+    suits = {'Spades': 0, 'Hearts': 0, 'Diamonds': 0, 'Clubs': 0}
+    for card in cards:
+        suit = card.split()[-1]
+        suits[suit] += 1
+    return suits
+
+
+# ფუნქცია, რომელიც ითვლის კარტის მნიშვნელობების რაოდენობას
+def calculate_values(cards):
+    values = {}
+    for card in cards:
+        value = card.split()[0]
+        if value not in values:
+            values[value] = 0
+        values[value] += 1
+    return values
+
 
 def main():
     #შეიქმნება კარტების დასტის სია
@@ -59,6 +99,9 @@ def main():
         print(f"{player}'s Cards:")
         for i in range(len(cards)):
             print(f"{i + 1}. {cards[i]}")
+        print(f"Total Points: {calculate_points(cards)}")  # მაგალითისთვის ჩავსვი, რომ მენახა, სწორად ითვლიდა თუ არა
+        print(f"Suits: {calculate_suits(cards)}")
+        print(f"Values: {calculate_values(cards)}")
         print()
         
     #კითხავს მოთამაშეებს სათითაოდ, თუ უნდათ კარტის შეცვლა, თუ კი, შეცვლის ერთ კარტს ამ მოთამაშისთვის და დავბეჭდავთ.
@@ -67,6 +110,9 @@ def main():
         print(f"{player}'s Cards:")
         for i in range(len(cards)):
             print(f"{i + 1}. {cards[i]}")
+        print(f"Total Points: {calculate_points(cards)}")  # მაგალითისთვის ჩავსვი, რომ მენახა, სწორად ითვლიდა თუ არა
+        print(f"Suits: {calculate_suits(cards)}")
+        print(f"Values: {calculate_values(cards)}")
         print()
     
 if __name__ == "__main__" :
