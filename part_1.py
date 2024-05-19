@@ -209,7 +209,7 @@ def main():
         print(f"{player}'s Cards:")
         for i in range(len(cards)):
             print(f"{i + 1}. {cards[i]}")
-        print(f"Total Points: {calculate_points(cards)}")  # მაგალითისთვის ჩავსვი, რომ მენახა, სწორად ითვლიდა თუ არა
+        print(f"Total Points: {calculate_points(cards)}")  
         print(f"Suits: {calculate_suits(cards)}")
         print(f"Values: {calculate_values(cards)}")
     winner = calculate_winners(new_cards_for_players)
