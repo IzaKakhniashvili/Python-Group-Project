@@ -2,14 +2,16 @@ import random
 
 
 #შევქმნათ სია, რომელშიც შევინახავთ კარტის დასტას.
+
 def create_deck():
     deck = []
     suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
     values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
-    for suit in suits:
-        for value in values:
-            deck.append(f"{value} of {suit}")
-    random.shuffle(deck)
+    for _ in range(4):
+        for suit in suits:
+            for value in values:
+                deck.append(f"{value} of {suit}")
+        random.shuffle(deck)
     return deck
 
 
@@ -85,7 +87,104 @@ def calculate_values(cards):
         values[value] += 1
     return values
 
-
+def print_the_cards(cards_for_players):
+    for player, cards in cards_for_players.items():
+        print(f"{player}'s Cards:")
+        for i in range(len(cards)):
+            print(f"{i + 1}. {cards[i]}")
+        print(f"Total Points: {calculate_points(cards)}")
+        print(f"Suits: {calculate_suits(cards)}")
+        print(f"Values: {calculate_values(cards)}")
+        print()
+def deal_cards(players):
+    print("--" * 20) 
+    print("Dealing cards...")
+    print()
+    deck = create_deck()
+    cards_for_players = generate_cards(players, deck)
+    print_the_cards(cards_for_players)
+    cards_for_players = change_cards(cards_for_players, deck)
+    return cards_for_players
+def calculate_winners(new_cards_for_players):
+    if len(new_cards_for_players.keys()) == 3:
+        min_points = float('inf')
+        losers = []
+        for player, cards in new_cards_for_players.items():
+            points = calculate_points(cards)
+            if points < min_points:
+                losers = [player]
+                min_points = points
+            elif points == min_points:
+                losers.append(player)
+        
+        if len(losers) == 1:
+            del new_cards_for_players[losers[0]]
+            players = new_cards_for_players.keys()
+            deal_cards(players)
+            return calculate_winners(new_cards_for_players)
+        elif len(losers) > 1:
+            
+            max_color_loser_1 = max(new_cards_for_players[losers[0]], key=lambda card: card[1][0])
+            max_color_loser_2 = max(new_cards_for_players[losers[1]], key=lambda card: card[1][0])
+            if max_color_loser_1[1][0] > max_color_loser_2[1][0]:
+                del new_cards_for_players[losers[1]]
+                players = new_cards_for_players.keys()
+                deal_cards(players)
+                return calculate_winners(new_cards_for_players)
+            elif max_color_loser_1[1][0] < max_color_loser_2[1][0]:
+                del new_cards_for_players[losers[0]]
+                players = new_cards_for_players.keys()
+                deal_cards(players)
+                return calculate_winners(new_cards_for_players) 
+            else:
+                
+                max_value_loser_1 = max(new_cards_for_players[losers[0]], key=lambda card: card[0])
+                max_value_loser_2 = max(new_cards_for_players[losers[1]], key=lambda card: card[0])
+                if max_value_loser_1[0] > max_value_loser_2[0]:
+                    del new_cards_for_players[losers[1]]
+                    players = new_cards_for_players.keys()
+                    deal_cards(players)
+                    return calculate_winners(new_cards_for_players)
+                elif max_value_loser_1[0] < max_value_loser_2[0]:
+                    del new_cards_for_players[losers[0]]
+                    players = new_cards_for_players.keys()
+                    deal_cards(players)
+                    return calculate_winners(new_cards_for_players)
+                else:
+                    players = new_cards_for_players.keys()
+                    deal_cards(players)
+                    return calculate_winners(new_cards_for_players)    
+    elif len(new_cards_for_players.keys()) == 2:
+        players = list(new_cards_for_players.keys())
+        if calculate_points(new_cards_for_players[players[0]]) > calculate_points(new_cards_for_players[players[1]]):
+            del new_cards_for_players[players[1]]
+            return new_cards_for_players
+        elif calculate_points(new_cards_for_players[players[0]]) < calculate_points(new_cards_for_players[players[1]]):
+            del new_cards_for_players[players[0]]
+            return new_cards_for_players
+        else:
+            max_color_loser_1 = max(new_cards_for_players[players[0]], key=lambda card: card[1][0])
+            max_color_loser_2 = max(new_cards_for_players[players[1]], key=lambda card: card[1][0])
+            if max_color_loser_1[1][0] > max_color_loser_2[1][0]:
+                del new_cards_for_players[players[1]]
+                return new_cards_for_players
+            elif max_color_loser_1[1][0] < max_color_loser_2[1][0]:
+                del new_cards_for_players[players[0]]
+                return new_cards_for_players
+            else:
+                max_value_loser_1 = max(new_cards_for_players[players[0]], key=lambda card: card[0])
+                max_value_loser_2 = max(new_cards_for_players[players[1]], key=lambda card: card[0])
+                if max_value_loser_1[0] > max_value_loser_2[0]:
+                    del new_cards_for_players[players[1]]
+                    return new_cards_for_players
+                elif max_value_loser_1[0] < max_value_loser_2[0]:
+                    del new_cards_for_players[players[0]]
+                    return new_cards_for_players
+                else:
+                    players = new_cards_for_players.keys()
+                    deal_cards(players)
+                    return calculate_winners(new_cards_for_players)    
+    
 def main():
     #შეიქმნება კარტების დასტის სია
     deck = create_deck()
@@ -113,7 +212,19 @@ def main():
         print(f"Total Points: {calculate_points(cards)}")  # მაგალითისთვის ჩავსვი, რომ მენახა, სწორად ითვლიდა თუ არა
         print(f"Suits: {calculate_suits(cards)}")
         print(f"Values: {calculate_values(cards)}")
-        print()
+    winner = calculate_winners(new_cards_for_players)
+    print_the_cards(winner)
+    print("--" * 20)
+    for player, cards in winner.items():
+        print(f"{player} won with {cards}!")
+        print(f"{player}'s total points: {calculate_points(cards)}")
+        print(f"{player}'s suits: {calculate_suits(cards)}")
+        print(f"{player}'s values: {calculate_values(cards)}")
+
+    
+    print("Thanks for playing!")
+        
+    
     
 if __name__ == "__main__" :
     main()
