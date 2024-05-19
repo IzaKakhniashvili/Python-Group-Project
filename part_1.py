@@ -213,7 +213,6 @@ def main():
         print(f"Suits: {calculate_suits(cards)}")
         print(f"Values: {calculate_values(cards)}")
     winner = calculate_winners(new_cards_for_players)
-    print_the_cards(winner)
     print("--" * 20)
     for player, cards in winner.items():
         print(f"{player} won with {cards}!")
