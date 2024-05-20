@@ -93,9 +93,9 @@ def print_the_cards(cards_for_players):
         for i in range(len(cards)):
             print(f"{i + 1}. {cards[i]}")
         print(f"Total Points: {calculate_points(cards)}")
-        print(f"Suits: {calculate_suits(cards)}")
-        print(f"Values: {calculate_values(cards)}")
         print()
+        print()
+        
 def deal_cards(players):
     print("--" * 20) 
     print("Dealing cards...")
@@ -105,6 +105,7 @@ def deal_cards(players):
     print_the_cards(cards_for_players)
     cards_for_players = change_cards(cards_for_players, deck)
     return cards_for_players
+
 def calculate_winners(new_cards_for_players):
     if len(new_cards_for_players.keys()) == 3:
         min_points = float('inf')
@@ -194,31 +195,32 @@ def main():
     
     #დავაგენერირებთ კარტს თითოეული მოთამაშისთვის და დავბეჭდავთ
     cards_for_players = generate_cards(players, deck)
+    print()
     for player, cards in cards_for_players.items():
         print(f"{player}'s Cards:")
         for i in range(len(cards)):
             print(f"{i + 1}. {cards[i]}")
         print(f"Total Points: {calculate_points(cards)}")  
-        print(f"Suits: {calculate_suits(cards)}")
-        print(f"Values: {calculate_values(cards)}")
         print()
         
     #კითხავს მოთამაშეებს სათითაოდ, თუ უნდათ კარტის შეცვლა, თუ კი, შეცვლის ერთ კარტს ამ მოთამაშისთვის და დავბეჭდავთ.
     new_cards_for_players = change_cards(cards_for_players, deck)
+    print()
     for player, cards in new_cards_for_players.items():
         print(f"{player}'s Cards:")
         for i in range(len(cards)):
             print(f"{i + 1}. {cards[i]}")
         print(f"Total Points: {calculate_points(cards)}")  
-        print(f"Suits: {calculate_suits(cards)}")
-        print(f"Values: {calculate_values(cards)}")
+        print()
+       
+       
     winner = calculate_winners(new_cards_for_players)
     print("--" * 20)
     for player, cards in winner.items():
-        print(f"{player} won with {cards}!")
+        print(f"{player} won with: ")
+        for i in range(len(cards)):
+            print(f"{i + 1}. {cards[i]}")
         print(f"{player}'s total points: {calculate_points(cards)}")
-        print(f"{player}'s suits: {calculate_suits(cards)}")
-        print(f"{player}'s values: {calculate_values(cards)}")
 
     
     print("Thanks for playing!")
